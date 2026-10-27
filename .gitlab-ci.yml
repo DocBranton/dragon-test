@@ -1,9 +1,10 @@
 # Candidate configuration based on supplied April 2026 DRAGON AGENTS.md.
-# Validate the include project/path/ref on the actual WDP GitLab instance before running.
+# Project path and route confirmed from WDP GitLab DRAGON repository screenshot (2026-10-27).
+# Pin an approved release tag after confirming it is available on the WDP instance.
 # This tests DRAGON container build/scanning ONLY; it does NOT deploy to Databricks Apps.
 include:
-  - project: promotion/tekton-promotion-gitlab
-    ref: v2.1.29
+  - project: platform/dragon
+    ref: main
     file: routes/container-only.yml
 
 variables:
