@@ -1,0 +1,14 @@
+# Alternative DRAGON route if WDP requires container scanning.
+# Copy into root .gitlab-ci.yml only after confirmation by WDP.
+include:
+  - project: platform/dragon
+    ref: main
+    file: routes/container-only.yml
+
+variables:
+  CONTAINER_BUILD: "true"
+  DOCKERFILE_PATH: "Dockerfile"
+  KANIKO_CONTEXT: "."
+  TRIVY_SCAN: "true"
+  TRIVY_SEVERITY: "HIGH,CRITICAL"
+  TRIVY_EXIT_CODE: "0" # report-only; not an enforced security gate
