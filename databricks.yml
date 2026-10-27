@@ -1,0 +1,14 @@
+bundle:
+  name: dragon-test
+
+resources:
+  apps:
+    hello_world_app:
+      name: dragon-test-hello-world
+      description: Node.js DRAGON validation app
+      source_code_path: .
+
+targets:
+  test:
+    default: true
+    mode: development
