@@ -1,67 +1,66 @@
-# WDP / DRAGON Node.js Hello World
+# WDP DRAGON — Node.js Hello World
 
-Minimal, dependency-free Node.js web app for validating **two separately validated gates**:
+Minimal native Databricks App organized according to WDP's DRAGON-specific application layout.
 
-1. WDP GitLab to DRAGON container build, scanning, and evidence.
-2. WDP Databricks Apps runtime deployment, after authorization and a verified handoff.
+## Repository structure
 
-**This GitHub repository does not automatically deploy into WDP.**
-
-## Contents
-
-- `server.js`: HTTP app at `/` and `/health`.
-- `package.json`: Node startup and tests; no external packages.
-- `app.yaml`: Databricks Apps startup command.
-- `Dockerfile`: example container; replace public base image with WDP-approved image when needed.
-- `.gitlab-ci.yml`: **unverified candidate** DRAGON container-only route.
-- `tests/server.test.js`: local smoke tests.
-
-## Run locally
-
-Requires Node.js 20+.
-
-```bash
-npm test
-npm start
-# Open http://localhost:8000/ and http://localhost:8000/health
+```
+dragon-test/
+├── .gitlab-ci.yml
+├── databricks.yml
+├── resources/
+│   └── hello_world.app.yml
+├── src/
+│   └── app/
+│       ├── app.yaml
+│       ├── package.json
+│       └── server.js
+├── tests/
+│   └── server.test.js
+└── examples/
+    └── container-only.gitlab-ci.yml
 ```
 
-## WDP GitLab onboarding
+## WDP deployment target
 
-1. Create a new non-production project on https://gitlab.advana.data.mil/.
-2. Import/mirror this GitHub source to WDP GitLab using your authorized process.
-3. The screenshot confirms DRAGON lives at `platform/dragon` on WDP GitLab and exposes `routes/container-only.yml`. The test uses `ref: main` until an approved immutable version tag is verified. Validate with GitLab CI Lint before executing.
-4. Check route rules, allowed registry/base images, CI/CD variables, project trigger permissions, and runners.
-5. Validate YAML using GitLab CI Lint and initiate a non-production run under permitted branch/tag rules.
-6. Collect commit SHA, pipeline/downstream IDs, Tekton run ID, build outcome, scan severities, SBOM reports, approval decisions, and failures/skips.
-7. Treat `TRIVY_EXIT_CODE: "0"` as **report-only**, not an enforced vulnerability gate. Follow WDP Cyber guidance before enforcing security policy.
+- GitLab route: `platform/dragon/routes/databricks-app-deploy.yml`
+- Databricks host: `https://advana-build-blade.cloud.databricks.mil`
+- Intended workspace ID: `40275338454178` (verify in deployment log)
+- Bundle target: `prod` with `mode: production`, as prescribed by WDP documentation
+- App name: `dragon-test-hello-world`
+- Source: `src/app/`
+- DRAGON supplies workspace identity, credentials and managed deployment path. No credentials or `root_path` are stored here.
+- The source is mirrored from GitHub into WDP GitLab. This project's pipeline uses **manual-only** `workflow: rules` to prevent deployments from mirror updates.
+- Unlike the earlier deploy-only test, the configuration now performs **deploy and run** (`DATABRICKS_DEPLOY_ONLY=false`). **Running the pipeline can actually create and start an App**.
 
-## Databricks-specific DRAGON routes visible in WDP
+## Local smoke test
 
-The WDP DRAGON repository screenshot also shows `routes/databricks-app-deploy.yml` and `routes/databricks-only.yml`. Review their contents and associated docs before attempting to automate Databricks Apps deployment. The container-only route remains the deliberately limited first test.
+Requires Node.js 20+:
 
-## Databricks Apps deployment is a separate gate
+```bash
+node --test tests/server.test.js
+node src/app/server.js
+# Browse http://localhost:8000 and http://localhost:8000/health
+```
 
-Target: https://advana-blade.cloud.databricks.mil/ (workspace `40275338454178`).
+No npm dependencies or secrets required.
 
-Confirm with WDP whether native Node.js Apps are authorized, how code is promoted into the workspace, and what ties the runtime source to a DRAGON-assessed commit. Deploy only via the authorized route. Verify home page, health endpoint, application logs, and matching source revision.
+## First WDP test
 
-**DRAGON's container promotion and Helm/Kubernetes route does not by itself establish Databricks Apps deployment support.**
+1. Pull/mirror latest GitHub main into the WDP GitLab project.
+2. Confirm `databricks.yml`, `resources/hello_world.app.yml`, and `src/app/app.yaml` exist.
+3. Review and approve target workspace, app name and release/test authorization.
+4. Validate the pipeline in GitLab CI editor.
+5. Manually trigger the pipeline only when authorized, and inspect downstream DRAGON security scan and deployment logs.
+6. Verify the logged workspace ID is `40275338454178` and locate the App in the `advana-build-blade` Apps page.
+7. Validate that the homepage, `/health`, and source revision match the scanned commit.
 
-## Questions for WDP
+## Known blocker
 
-- Is DRAGON mirrored/accessible on this GitLab host and which release/ref should we pin?
-- Does container-only produce sufficient security evidence? Which scanner findings actually block a release?
-- What approved Node base images and dependency registries can be used?
-- Is there an approved DRAGON-to-Databricks Apps release handoff?
-- How are findings, exceptions, approvals, and deployed revisions correlated?
+The previous DRAGON run reached `databricks bundle deploy` but failed with `default auth: cannot configure default credentials` using OAuth M2M. This is **not yet proven resolved** by the restructure. DRAGON's service principal and workspace authentication may require platform-team support. Do not embed credentials in this repository.
 
-## Update: DRAGON Apps-specific route (October 2026)
+## Security
 
-The DRAGON repository is `platform/dragon` on WDP GitLab. The user-provided `routes/databricks-app-deploy.yml` explicitly enables a Databricks bundle workflow, supports `DATABRICKS_DEPLOY_ONLY`, and offers bundle target/run target parameters. Accordingly the root `.gitlab-ci.yml` now includes that route. A separate optional container assessment example is retained at `examples/container-only.gitlab-ci.yml`.
+DRAGON documentation indicates TruffleHog, SonarQube, ClamAV, Checkov and bundle validation. Verify which gates actually execute and their results in the WDP pipeline. This application does not use SQL warehouses, Unity Catalog, or user API scopes. Application access groups should be configured as WDP-approved permissions in the app resource before broader release.
 
-The root `databricks.yml` declares an App resource named `hello_world_app` using the application source in the repository root. The default target is `test` (development mode). DRAGON must supply/resolve the approved workspace host, identity, and deployment destination. Do not assume its default environment selects the intended BLADE workspace.
-
-The current DRAGON config uses `DATABRICKS_DEPLOY_ONLY: "true"` (deploy definition/source but do not start). After confirmation of the WDP target, scan requirements, approval gates, installed Databricks CLI version, and permissions, set to `"false"` for deploy + run. Run targets use the **bundle resource key** `hello_world_app`, not the deployed app name. The Databricks CLI needs Apps bundle support (introduced in CLI 0.239.0).
-
-**Outstanding**: The full contents of DRAGON `upstream-defaults.yml`, promotion trigger, downstream jobs, authentication and target rules have not been inspected. Consequently GitLab CI Lint and a controlled WDP test remain mandatory. Scanning mentioned in DRAGON comments does not prove an enforced gate.
+The Dockerfile and `examples/container-only.gitlab-ci.yml` are optional alternative assessment examples and are **not** used by the native Databricks Apps route.
