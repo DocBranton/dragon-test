@@ -1,7 +1,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const server = require('../server');
+const server = require('../src/app/server');
 test('homepage and health endpoint respond correctly', async () => {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   try {
