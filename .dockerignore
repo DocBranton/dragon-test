@@ -1,0 +1,6 @@
+.git
+.gitlab
+node_modules
+coverage
+*.zip
+README.md
