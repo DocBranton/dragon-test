@@ -1,0 +1,11 @@
+{
+  "name": "wdp-dragon-hello-world",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal Node.js app for WDP DRAGON assessment and Databricks Apps runtime testing",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=20" }
+}
