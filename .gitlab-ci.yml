@@ -1,7 +1,6 @@
-# DRAGON Databricks App deployment candidate for WDP GitLab.
-# Validate include, target authentication, scan policy and authorization in WDP before running.
-# Run this project's pipeline only when manually started from GitLab UI.
-# Keep pull mirroring enabled without starting deployments on each update.
+# WDP-approved Databricks Apps DRAGON deployment route.
+# Only a user-initiated GitLab pipeline can invoke DRAGON from this project.
+# 'prod' is the bundle target; the workspace remains advana-build-blade.
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -14,14 +13,10 @@ include:
     file: routes/databricks-app-deploy.yml
 
 variables:
-  ENABLE_DATABRICKS_WORKFLOW: "true"
-  # Required by DRAGON Tekton deploy task; confirm hostname with WDP workspace URL.
   DATABRICKS_HOST: "https://advana-build-blade.cloud.databricks.mil"
+  DEPLOY_TARGET: "prod"
   DATABRICKS_PROJECT_DIR: "."
   DATABRICKS_JOB_FILE: "databricks.yml"
-  DATABRICKS_BUNDLE_TARGET: "test"
+  DATABRICKS_BUNDLE_TARGET: "prod"
   DATABRICKS_BUNDLE_RUN_TARGET: "hello_world_app"
-  # First stage: deploy-only, without starting the app.
-  # After WDP approves and validates this path, set to "false" to deploy and run.
-  DATABRICKS_DEPLOY_ONLY: "true"
-  DEPLOY_TEST: "true"
+  DATABRICKS_DEPLOY_ONLY: "false"
