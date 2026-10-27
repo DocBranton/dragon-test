@@ -1,6 +1,6 @@
 # WDP / DRAGON Node.js Hello World
 
-Minimal, dependency-free Node.js web app for validating **two separate gates**:
+Minimal, dependency-free Node.js web app for validating **two separately validated gates**:
 
 1. WDP GitLab to DRAGON container build, scanning, and evidence.
 2. WDP Databricks Apps runtime deployment, after authorization and a verified handoff.
@@ -55,3 +55,13 @@ Confirm with WDP whether native Node.js Apps are authorized, how code is promote
 - What approved Node base images and dependency registries can be used?
 - Is there an approved DRAGON-to-Databricks Apps release handoff?
 - How are findings, exceptions, approvals, and deployed revisions correlated?
+
+## Update: DRAGON Apps-specific route (October 2026)
+
+The DRAGON repository is `platform/dragon` on WDP GitLab. The user-provided `routes/databricks-app-deploy.yml` explicitly enables a Databricks bundle workflow, supports `DATABRICKS_DEPLOY_ONLY`, and offers bundle target/run target parameters. Accordingly the root `.gitlab-ci.yml` now includes that route. A separate optional container assessment example is retained at `examples/container-only.gitlab-ci.yml`.
+
+The root `databricks.yml` declares an App resource named `hello_world_app` using the application source in the repository root. The default target is `test` (development mode). DRAGON must supply/resolve the approved workspace host, identity, and deployment destination. Do not assume its default environment selects the intended BLADE workspace.
+
+The current DRAGON config uses `DATABRICKS_DEPLOY_ONLY: "true"` (deploy definition/source but do not start). After confirmation of the WDP target, scan requirements, approval gates, installed Databricks CLI version, and permissions, set to `"false"` for deploy + run. Run targets use the **bundle resource key** `hello_world_app`, not the deployed app name. The Databricks CLI needs Apps bundle support (introduced in CLI 0.239.0).
+
+**Outstanding**: The full contents of DRAGON `upstream-defaults.yml`, promotion trigger, downstream jobs, authentication and target rules have not been inspected. Consequently GitLab CI Lint and a controlled WDP test remain mandatory. Scanning mentioned in DRAGON comments does not prove an enforced gate.
