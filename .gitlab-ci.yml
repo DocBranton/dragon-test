@@ -1,0 +1,16 @@
+# Candidate configuration based on supplied April 2026 DRAGON AGENTS.md.
+# Validate the include project/path/ref on the actual WDP GitLab instance before running.
+# This tests DRAGON container build/scanning ONLY; it does NOT deploy to Databricks Apps.
+include:
+  - project: promotion/tekton-promotion-gitlab
+    ref: v2.1.29
+    file: routes/container-only.yml
+
+variables:
+  CONTAINER_BUILD: "true"
+  DOCKERFILE_PATH: "Dockerfile"
+  KANIKO_CONTEXT: "."
+  TRIVY_SCAN: "true"
+  TRIVY_SEVERITY: "HIGH,CRITICAL"
+  # Reporting-oriented test; a zero exit code does not establish an enforced vulnerability gate.
+  TRIVY_EXIT_CODE: "0"
