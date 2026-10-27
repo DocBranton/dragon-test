@@ -7,6 +7,8 @@ include:
 
 variables:
   ENABLE_DATABRICKS_WORKFLOW: "true"
+  # Required by DRAGON Tekton deploy task; confirm hostname with WDP workspace URL.
+  DATABRICKS_HOST: "https://advana-build-blade.cloud.databricks.mil"
   DATABRICKS_PROJECT_DIR: "."
   DATABRICKS_JOB_FILE: "databricks.yml"
   DATABRICKS_BUNDLE_TARGET: "test"
