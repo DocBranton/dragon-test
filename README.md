@@ -30,11 +30,15 @@ npm start
 
 1. Create a new non-production project on https://gitlab.advana.data.mil/.
 2. Import/mirror this GitHub source to WDP GitLab using your authorized process.
-3. Verify that `promotion/tekton-promotion-gitlab`, `v2.1.29`, and `routes/container-only.yml` are accessible on the target GitLab instance. Adjust the include to WDP-approved route/revision if necessary.
+3. The screenshot confirms DRAGON lives at `platform/dragon` on WDP GitLab and exposes `routes/container-only.yml`. The test uses `ref: main` until an approved immutable version tag is verified. Validate with GitLab CI Lint before executing.
 4. Check route rules, allowed registry/base images, CI/CD variables, project trigger permissions, and runners.
 5. Validate YAML using GitLab CI Lint and initiate a non-production run under permitted branch/tag rules.
 6. Collect commit SHA, pipeline/downstream IDs, Tekton run ID, build outcome, scan severities, SBOM reports, approval decisions, and failures/skips.
 7. Treat `TRIVY_EXIT_CODE: "0"` as **report-only**, not an enforced vulnerability gate. Follow WDP Cyber guidance before enforcing security policy.
+
+## Databricks-specific DRAGON routes visible in WDP
+
+The WDP DRAGON repository screenshot also shows `routes/databricks-app-deploy.yml` and `routes/databricks-only.yml`. Review their contents and associated docs before attempting to automate Databricks Apps deployment. The container-only route remains the deliberately limited first test.
 
 ## Databricks Apps deployment is a separate gate
 
