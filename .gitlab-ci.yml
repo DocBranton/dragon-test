@@ -1,17 +1,17 @@
-# Candidate configuration based on supplied April 2026 DRAGON AGENTS.md.
-# Project path and route confirmed from WDP GitLab DRAGON repository screenshot (2026-10-27).
-# Pin an approved release tag after confirming it is available on the WDP instance.
-# This tests DRAGON container build/scanning ONLY; it does NOT deploy to Databricks Apps.
+# DRAGON Databricks App deployment candidate for WDP GitLab.
+# Validate include, target authentication, scan policy and authorization in WDP before running.
 include:
   - project: platform/dragon
     ref: main
-    file: routes/container-only.yml
+    file: routes/databricks-app-deploy.yml
 
 variables:
-  CONTAINER_BUILD: "true"
-  DOCKERFILE_PATH: "Dockerfile"
-  KANIKO_CONTEXT: "."
-  TRIVY_SCAN: "true"
-  TRIVY_SEVERITY: "HIGH,CRITICAL"
-  # Reporting-oriented test; a zero exit code does not establish an enforced vulnerability gate.
-  TRIVY_EXIT_CODE: "0"
+  ENABLE_DATABRICKS_WORKFLOW: "true"
+  DATABRICKS_PROJECT_DIR: "."
+  DATABRICKS_JOB_FILE: "databricks.yml"
+  DATABRICKS_BUNDLE_TARGET: "test"
+  DATABRICKS_BUNDLE_RUN_TARGET: "hello_world_app"
+  # First stage: deploy-only, without starting the app.
+  # After WDP approves and validates this path, set to "false" to deploy and run.
+  DATABRICKS_DEPLOY_ONLY: "true"
+  DEPLOY_TEST: "true"
