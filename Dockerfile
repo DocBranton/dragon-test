@@ -1,7 +1,8 @@
-# Sample base image ONLY. Replace with a WDP-approved, internally mirrored image if required.
+# Optional container-only test; not used by the WDP native Databricks App DRAGON route.
+# Replace public image with WDP-approved base image before container testing.
 FROM node:22-alpine
 WORKDIR /app
-COPY package.json server.js ./
+COPY src/app/package.json src/app/server.js ./
 ENV NODE_ENV=production
 ENV PORT=8000
 USER node
