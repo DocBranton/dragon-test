@@ -1,0 +1,12 @@
+resources:
+  apps:
+    hello_world_app:
+      name: dragon-test-hello-world
+      description: WDP DRAGON Node.js Hello World
+      source_code_path: ../src/app
+      config:
+        command:
+          - node
+          - server.js
+      lifecycle:
+        started: true
