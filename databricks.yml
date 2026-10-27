@@ -12,3 +12,6 @@ targets:
   test:
     default: true
     mode: development
+    workspace:
+      host: https://advana-build-blade.cloud.databricks.mil
+      workspace_id: 40275338454178
