@@ -8,5 +8,8 @@ resources:
         command:
           - node
           - server.js
+      permissions:
+        - level: CAN_MANAGE
+          user_name: david.branton.ctr@us.af.mil
       lifecycle:
         started: true
