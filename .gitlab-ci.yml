@@ -1,6 +1,6 @@
 # WDP-approved Databricks Apps DRAGON deployment route.
 # Only a user-initiated GitLab pipeline can invoke DRAGON from this project.
-# 'prod' is the bundle target; the workspace remains advana-build-blade.
+# 'prod' is the bundle target; the workspace is advana-blade.
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -13,7 +13,7 @@ include:
     file: routes/databricks-app-deploy.yml
 
 variables:
-  DATABRICKS_HOST: "https://advana-build-blade.cloud.databricks.mil"
+  DATABRICKS_HOST: "https://advana-blade.cloud.databricks.mil"
   DEPLOY_TARGET: "prod"
   DATABRICKS_PROJECT_DIR: "."
   DATABRICKS_JOB_FILE: "databricks.yml"
