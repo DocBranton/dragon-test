@@ -24,8 +24,8 @@ dragon-test/
 ## WDP deployment target
 
 - GitLab route: `platform/dragon/routes/databricks-app-deploy.yml`
-- Databricks host: `https://advana-build-blade.cloud.databricks.mil`
-- Intended workspace ID: `40275338454178` (verify in deployment log)
+- Databricks host: `https://advana-blade.cloud.databricks.mil`
+- Intended workspace ID: `1823921654620621` (verify in deployment log)
 - Bundle target: `prod` with `mode: production`, as prescribed by WDP documentation
 - App name: `dragon-test-hello-world`
 - Source: `src/app/`
@@ -52,7 +52,7 @@ No npm dependencies or secrets required.
 3. Review and approve target workspace, app name and release/test authorization.
 4. Validate the pipeline in GitLab CI editor.
 5. Manually trigger the pipeline only when authorized, and inspect downstream DRAGON security scan and deployment logs.
-6. Verify the logged workspace ID is `40275338454178` and locate the App in the `advana-build-blade` Apps page.
+6. Verify the logged workspace ID is `1823921654620621` and locate the App in the `advana-blade` Apps page.
 7. Validate that the homepage, `/health`, and source revision match the scanned commit.
 
 ## Known blocker
