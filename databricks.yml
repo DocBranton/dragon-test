@@ -8,4 +8,4 @@ targets:
   prod:
     mode: production
     workspace:
-      host: https://advana-build-blade.cloud.databricks.mil
+      host: https://advana-blade.cloud.databricks.mil
